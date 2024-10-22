@@ -1,11 +1,7 @@
 /** @format */
 
 import "./App.css";
-import {
-  BrowserRouter,
-  createBrowserRouter,
-  RouterProvider,
-} from "react-router-dom";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import ListOfAllRecipes from "./ListOfAllRecipes/ListOfAllRecipes";
 

@@ -75,7 +75,7 @@ const ListOfAllRecipes = () => {
 
   const handleSearchClick = (e: React.KeyboardEvent<HTMLInputElement>) => {
     const value = (e.target as HTMLInputElement).value;
-    if (e.key == "Enter") {
+    if (e.key === "Enter") {
       fetchMealByName(value);
       setSearchClick(true);
     }
