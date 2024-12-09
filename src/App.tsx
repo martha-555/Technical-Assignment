@@ -4,6 +4,7 @@ import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import ListOfAllRecipes from "./ListOfAllRecipes/ListOfAllRecipes";
+import SelectedRecipe from "./SelectedRecipe/SelectedRecipe";
 
 const routers = createBrowserRouter([
   {
@@ -13,6 +14,10 @@ const routers = createBrowserRouter([
   {
     path: "/list",
     element: <ListOfAllRecipes />,
+  },
+  {
+    path: "/selected",
+    element: <SelectedRecipe />,
   },
 ]);
 function App() {

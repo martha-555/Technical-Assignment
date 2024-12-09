@@ -25,6 +25,7 @@ const ListOfAllRecipes = () => {
       `https://www.themealdb.com/api/json/v1/1/search.php?f=${letter}`
     );
     const data = await response.json();
+
     const filteredData =
       data.meals?.map((meal: any) => ({
         idMeal: meal.idMeal,
@@ -33,6 +34,7 @@ const ListOfAllRecipes = () => {
         strArea: meal.strArea,
         strMealThumb: meal.strMealThumb,
       })) || [];
+
     setList((list) => [...list, ...filteredData]);
   }, []);
 
@@ -46,7 +48,7 @@ const ListOfAllRecipes = () => {
   useEffect(() => {
     fetchAllData();
   }, []);
-
+  console.log(list);
   const updateVisibilityRecipe = () => {
     if (!isLoading) {
       setSearchClick(false);
