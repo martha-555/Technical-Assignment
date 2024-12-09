@@ -1,0 +1,21 @@
+/** @format */
+body {
+  overflow: hidden;
+}
+
+.wrapperContainer {
+  display: flex;
+}
+
+.leftSide {
+  padding: 20px;
+  background: gray;
+  width: 30%;
+  height: 100vh;
+}
+
+.rightSide {
+  flex-grow: 1;
+  height: 100vh;
+  overflow-y: auto;
+}

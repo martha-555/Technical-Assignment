@@ -1,11 +1,12 @@
 /** @format */
 
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import classes from "./styles.module.css";
 import { RecipeCardType } from "../types/types";
 import Pagination from "../Pagination/Pagination";
 import { useSearchParams } from "react-router-dom";
 import Card from "../Card/Card";
+import PageWrapper from "../PageWrapper/PageWrapper";
 
 const ListOfAllRecipes = () => {
   const [list, setList] = useState<RecipeCardType[]>([]);
@@ -16,7 +17,7 @@ const ListOfAllRecipes = () => {
   const [searchClick, setSearchClick] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
 
-  const alphabet = "abcdefghijklmnopqrstuvwxyz".split("");
+  const alphabet = useMemo(() => "abcdefghijklmnopqrstuvwxyz".split(""), []);
   const PAGE_SIZE = 10;
   const pageNumber = searchParams.get("p") || 1;
 
@@ -26,7 +27,7 @@ const ListOfAllRecipes = () => {
     );
     const data = await response.json();
 
-    const filteredData =
+    const filteredData: RecipeCardType[] =
       data.meals?.map((meal: any) => ({
         idMeal: meal.idMeal,
         strMeal: meal.strMeal,
@@ -34,19 +35,26 @@ const ListOfAllRecipes = () => {
         strArea: meal.strArea,
         strMealThumb: meal.strMealThumb,
       })) || [];
-
-    setList((list) => [...list, ...filteredData]);
+    setList((prev) => {
+      const uniqueElements = filteredData.filter(
+        (item) => !prev.some((v) => v.idMeal === item.idMeal)
+      );
+      return [...prev, ...uniqueElements];
+    });
+    return filteredData;
   }, []);
 
-  const fetchAllData = async () => {
-    for (const letter of alphabet) {
-      await fetchDataForLetter(letter);
-    }
-    setIsLoading(false);
+  const allRecipes = () => {
+    Promise.all(alphabet.map((item) => fetchDataForLetter(item)))
+      .then((res) => {
+        setIsLoading(false);
+        return res;
+      })
+      .catch((error) => console.log(error));
   };
 
   useEffect(() => {
-    fetchAllData();
+    allRecipes();
   }, []);
   console.log(list);
   const updateVisibilityRecipe = () => {
@@ -56,8 +64,8 @@ const ListOfAllRecipes = () => {
         ? setVisibilityRecipe(list.slice(0, PAGE_SIZE))
         : setVisibilityRecipe(
             list.slice(
-              +pageNumber * PAGE_SIZE,
-              +pageNumber * PAGE_SIZE + PAGE_SIZE
+              (+pageNumber - 1) * PAGE_SIZE,
+              +pageNumber * PAGE_SIZE + PAGE_SIZE + 1
             )
           );
     }
@@ -67,11 +75,16 @@ const ListOfAllRecipes = () => {
     updateVisibilityRecipe();
   }, [isLoading, pageNumber]);
 
+  useEffect(() => {
+    console.log({ visibilityRecipe });
+  }, [visibilityRecipe]);
+
   const fetchMealByName = async (name: string) => {
     const response = await fetch(
       `https://www.themealdb.com/api/json/v1/1/search.php?s=${name}`
     );
     const data = await response.json();
+
     setVisibilityRecipe(data.meals);
   };
 
@@ -84,7 +97,7 @@ const ListOfAllRecipes = () => {
   };
 
   return (
-    <div>
+    <PageWrapper>
       <div>
         <input
           placeholder="search"
@@ -118,7 +131,7 @@ const ListOfAllRecipes = () => {
           />
         )}
       </div>
-    </div>
+    </PageWrapper>
   );
 };
 

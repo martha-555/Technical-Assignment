@@ -12,11 +12,11 @@ const routers = createBrowserRouter([
     element: <ListOfAllRecipes />,
   },
   {
-    path: "/list",
+    path: "/all_recipes",
     element: <ListOfAllRecipes />,
   },
   {
-    path: "/selected",
+    path: "/favorite",
     element: <SelectedRecipe />,
   },
 ]);
