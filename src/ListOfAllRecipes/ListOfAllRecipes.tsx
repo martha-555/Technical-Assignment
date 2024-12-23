@@ -1,131 +1,87 @@
 /** @format */
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import React, {
+  useCallback,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import classes from "./styles.module.css";
 import { RecipeCardType } from "../types/types";
 import Pagination from "../Pagination/Pagination";
 import { useSearchParams } from "react-router-dom";
 import Card from "../Card/Card";
 import PageWrapper from "../PageWrapper/PageWrapper";
+import { fetchAllRecipes } from "../api/fetchAllRecipes";
+import { fetchMealByName } from "../api/fetchMealByName";
+import SearchInput from "./SearchInput";
 
-const ListOfAllRecipes = () => {
+const ListOffetchAllRecipes = () => {
   const [list, setList] = useState<RecipeCardType[]>([]);
+  const [searchList, setSearchList] = useState<RecipeCardType[]>([]);
+
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [visibilityRecipe, setVisibilityRecipe] = useState<RecipeCardType[]>(
     []
   );
-  const [searchClick, setSearchClick] = useState<boolean>(false);
   const [searchParams] = useSearchParams();
-
+  const currentPage = searchParams.get("p") || 1;
+  const searchValue = searchParams.get("value");
   const alphabet = useMemo(() => "abcdefghijklmnopqrstuvwxyz".split(""), []);
   const PAGE_SIZE = 10;
-  const pageNumber = searchParams.get("p") || 1;
 
-  const fetchDataForLetter = useCallback(async (letter: string) => {
-    const response = await fetch(
-      `https://www.themealdb.com/api/json/v1/1/search.php?f=${letter}`
-    );
-    const data = await response.json();
+  const getAllRecipes = useCallback(async () => {
+    const data = await fetchAllRecipes(alphabet);
+    setIsLoading(false);
+    if (data) setList(data.flat());
+  }, [alphabet, setIsLoading, setList]);
 
-    const filteredData: RecipeCardType[] =
-      data.meals?.map((meal: any) => ({
-        idMeal: meal.idMeal,
-        strMeal: meal.strMeal,
-        strCategory: meal.strCategory,
-        strArea: meal.strArea,
-        strMealThumb: meal.strMealThumb,
-      })) || [];
-    setList((prev) => {
-      const uniqueElements = filteredData.filter(
-        (item) => !prev.some((v) => v.idMeal === item.idMeal)
-      );
-      return [...prev, ...uniqueElements];
-    });
-    return filteredData;
-  }, []);
+  const getMealByName = async (name: string) => {
+    const data = await fetchMealByName(name);
+    setIsLoading(false);
+    if (data) setSearchList(data.meals);
+  };
 
-  const allRecipes = () => {
-    Promise.all(alphabet.map((item) => fetchDataForLetter(item)))
-      .then((res) => {
-        setIsLoading(false);
-        return res;
-      })
-      .catch((error) => console.log(error));
+  const updateVisibilityRecipe = (data: RecipeCardType[]) => {
+    +currentPage === 1
+      ? setVisibilityRecipe(data?.slice(0, PAGE_SIZE))
+      : setVisibilityRecipe(
+          data?.slice((+currentPage - 1) * PAGE_SIZE, +currentPage * PAGE_SIZE)
+        );
   };
 
   useEffect(() => {
-    allRecipes();
-  }, []);
-  console.log(list);
-  const updateVisibilityRecipe = () => {
-    if (!isLoading) {
-      setSearchClick(false);
-      +pageNumber === 1
-        ? setVisibilityRecipe(list.slice(0, PAGE_SIZE))
-        : setVisibilityRecipe(
-            list.slice(
-              (+pageNumber - 1) * PAGE_SIZE,
-              +pageNumber * PAGE_SIZE + PAGE_SIZE + 1
-            )
-          );
-    }
-  };
+    searchValue && searchList?.length == 0 && getMealByName(searchValue);
+    !searchValue && list?.length == 0 && getAllRecipes();
+  }, [searchValue]);
 
   useEffect(() => {
-    updateVisibilityRecipe();
-  }, [isLoading, pageNumber]);
-
-  useEffect(() => {
-    console.log({ visibilityRecipe });
-  }, [visibilityRecipe]);
-
-  const fetchMealByName = async (name: string) => {
-    const response = await fetch(
-      `https://www.themealdb.com/api/json/v1/1/search.php?s=${name}`
-    );
-    const data = await response.json();
-
-    setVisibilityRecipe(data.meals);
-  };
-
-  const handleSearchClick = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    const value = (e.target as HTMLInputElement).value;
-    if (e.key === "Enter") {
-      fetchMealByName(value);
-      setSearchClick(true);
-    }
-  };
+    searchValue
+      ? updateVisibilityRecipe(searchList)
+      : updateVisibilityRecipe(list);
+  }, [list, isLoading, searchList, currentPage, searchValue]);
 
   return (
     <PageWrapper>
-      <div>
-        <input
-          placeholder="search"
-          className={classes.searchInput}
-          type="search"
-          onKeyDown={handleSearchClick}
-        />
-      </div>
-      {searchClick && (
-        <button className={classes.backButton} onClick={updateVisibilityRecipe}>
-          Back
-        </button>
-      )}
+      <SearchInput getMealByName={getMealByName} searchValue={searchValue} />
       <div className={classes.recipeList}>
         <div className={classes.cardContainer}>
           {isLoading ? (
             <div>Loading...</div>
           ) : (
-            visibilityRecipe.map((recipe, index) => (
+            visibilityRecipe?.map((recipe, index) => (
               <Card key={index} recipe={recipe} />
-            ))
+            )) || <div>За Вашим запитом нічого не знайдено </div>
           )}
         </div>
 
         {!isLoading && (
           <Pagination
             numberOfRecipes={
-              searchClick ? visibilityRecipe.length : list.length
+              (searchValue && searchList?.length) ||
+              (!searchValue && list?.length) ||
+              0
             }
             pageSize={PAGE_SIZE}
           />
@@ -135,4 +91,4 @@ const ListOfAllRecipes = () => {
   );
 };
 
-export default ListOfAllRecipes;
+export default ListOffetchAllRecipes;

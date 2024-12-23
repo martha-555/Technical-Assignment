@@ -9,9 +9,9 @@ const Layout = () => {
       <nav>
         <li>
           <Link to="/all_recipes">All recipes</Link>
-          <li>
-            <Link to="/favorite">Favorite recipes</Link>
-          </li>
+        </li>
+        <li>
+          <Link to="/favorite">Favorite recipes</Link>
         </li>
       </nav>
     </div>

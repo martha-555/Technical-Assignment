@@ -10,9 +10,12 @@ type Props = {
 
 const Pagination = (props: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const newParams = new URLSearchParams(searchParams);
   const currentPage = searchParams.get("p") || 1;
   const totalPages = Math.ceil(props.numberOfRecipes / props.pageSize);
-
+  const searchValue = searchParams.get("value");
+  // console.log(searchValue);
   const pageNumbers: number[] = [];
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
@@ -20,20 +23,16 @@ const Pagination = (props: Props) => {
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const page = (e.target as HTMLButtonElement).innerText;
-    setSearchParams({ p: page });
+    newParams.set("p", page.toString());
+    setSearchParams(newParams);
   };
-
-  useEffect(() => {
-    setSearchParams({ p: "1" });
-  }, []);
-
-  const firstElements = pageNumbers.splice(0, 3);
-  const lastElement = pageNumbers.splice(pageNumbers.length - 1, 1);
+  const firstPage = pageNumbers.splice(0, 3);
+  const lastPage = pageNumbers.splice(pageNumbers.length - 1, 1);
 
   return (
     <div className={classes.paginationContainer}>
       {totalPages > 1 &&
-        firstElements.map((i, index) => (
+        firstPage.map((i, index) => (
           <button
             className={
               currentPage == i.toString() ? classes.activePage : classes.page
@@ -66,17 +65,17 @@ const Pagination = (props: Props) => {
           </button>
         ))}
 
-      {+currentPage < lastElement[0] - 1 && <span>...</span>}
+      {+currentPage < lastPage[0] - 1 && <span>...</span>}
 
       {totalPages > 10 && (
         <button
           className={
-            currentPage == lastElement[0] ? classes.activePage : classes.page
+            currentPage == lastPage[0] ? classes.activePage : classes.page
           }
-          id={lastElement[0].toString()}
+          id={lastPage[0].toString()}
           onClick={handleClick}
         >
-          {lastElement[0]}{" "}
+          {lastPage[0]}{" "}
         </button>
       )}
     </div>
