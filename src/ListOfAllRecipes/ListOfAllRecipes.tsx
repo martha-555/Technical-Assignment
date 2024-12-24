@@ -13,35 +13,26 @@ import Pagination from "../Pagination/Pagination";
 import { useSearchParams } from "react-router-dom";
 import Card from "../Card/Card";
 import PageWrapper from "../PageWrapper/PageWrapper";
-import { fetchAllRecipes } from "../api/fetchAllRecipes";
-import { fetchMealByName } from "../api/fetchMealByName";
 import SearchInput from "./SearchInput";
+import { fetchMealByName } from "../store/fetch/fetchMealByName";
+import { fetchAllRecipes } from "../store/fetch/fetchAllRecipes";
+import { useDispatch, useSelector } from "react-redux";
+
+import { AppDispatch, RootState } from "../store/store";
 
 const ListOffetchAllRecipes = () => {
-  const [list, setList] = useState<RecipeCardType[]>([]);
-  const [searchList, setSearchList] = useState<RecipeCardType[]>([]);
-
-  const [isLoading, setIsLoading] = useState<boolean>(true);
   const [visibilityRecipe, setVisibilityRecipe] = useState<RecipeCardType[]>(
     []
   );
   const [searchParams] = useSearchParams();
   const currentPage = searchParams.get("p") || 1;
   const searchValue = searchParams.get("value");
-  const alphabet = useMemo(() => "abcdefghijklmnopqrstuvwxyz".split(""), []);
+
   const PAGE_SIZE = 10;
-
-  const getAllRecipes = useCallback(async () => {
-    const data = await fetchAllRecipes(alphabet);
-    setIsLoading(false);
-    if (data) setList(data.flat());
-  }, [alphabet, setIsLoading, setList]);
-
-  const getMealByName = async (name: string) => {
-    const data = await fetchMealByName(name);
-    setIsLoading(false);
-    if (data) setSearchList(data.meals);
-  };
+  const { recipes, loading, error, recipesByName } = useSelector(
+    (state: RootState) => state.recipes
+  );
+  const dispatch = useDispatch<AppDispatch>();
 
   const updateVisibilityRecipe = (data: RecipeCardType[]) => {
     +currentPage === 1
@@ -52,22 +43,32 @@ const ListOffetchAllRecipes = () => {
   };
 
   useEffect(() => {
-    searchValue && searchList?.length == 0 && getMealByName(searchValue);
-    !searchValue && list?.length == 0 && getAllRecipes();
-  }, [searchValue]);
+    searchValue &&
+      recipesByName?.length == 0 &&
+      dispatch(fetchMealByName(searchValue));
+    !searchValue && recipes?.length == 0 && dispatch(fetchAllRecipes());
+  }, [searchValue, dispatch]);
+
+  useEffect(() => {
+    // if (searchValue) dispatch(fetchMealByName(searchValue));
+  }, [dispatch, searchValue]);
 
   useEffect(() => {
     searchValue
-      ? updateVisibilityRecipe(searchList)
-      : updateVisibilityRecipe(list);
-  }, [list, isLoading, searchList, currentPage, searchValue]);
+      ? updateVisibilityRecipe(recipesByName)
+      : updateVisibilityRecipe(recipes);
+  }, [recipes, recipesByName, loading, currentPage, searchValue]);
+
+  useEffect(() => {
+    // console.log(recipesByName);
+  }, [recipes, recipesByName]);
 
   return (
     <PageWrapper>
-      <SearchInput getMealByName={getMealByName} searchValue={searchValue} />
+      <SearchInput searchValue={searchValue} />
       <div className={classes.recipeList}>
         <div className={classes.cardContainer}>
-          {isLoading ? (
+          {loading ? (
             <div>Loading...</div>
           ) : (
             visibilityRecipe?.map((recipe, index) => (
@@ -76,11 +77,11 @@ const ListOffetchAllRecipes = () => {
           )}
         </div>
 
-        {!isLoading && (
+        {!loading && (
           <Pagination
             numberOfRecipes={
-              (searchValue && searchList?.length) ||
-              (!searchValue && list?.length) ||
+              (searchValue && recipesByName?.length) ||
+              (!searchValue && recipes?.length) ||
               0
             }
             pageSize={PAGE_SIZE}

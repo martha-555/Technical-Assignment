@@ -15,8 +15,8 @@ const Pagination = (props: Props) => {
   const currentPage = searchParams.get("p") || 1;
   const totalPages = Math.ceil(props.numberOfRecipes / props.pageSize);
   const searchValue = searchParams.get("value");
-  // console.log(searchValue);
   const pageNumbers: number[] = [];
+
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
   }

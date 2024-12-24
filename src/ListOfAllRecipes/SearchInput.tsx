@@ -3,17 +3,21 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import classes from "./styles.module.css";
+import { fetchMealByName } from "../store/fetch/fetchMealByName";
+import { useDispatch } from "react-redux";
+import { AppDispatch } from "../store/store";
 
 type Props = {
-  getMealByName: (name: string) => Promise<void>;
   searchValue: string | null;
 };
 
-const SearchInput = ({ getMealByName, searchValue }: Props) => {
+const SearchInput = ({ searchValue }: Props) => {
   const [inputValue, setInputValue] = useState("");
   const [debounceValue, setDebounceValue] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const params = new URLSearchParams(searchParams);
+
+  const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -24,8 +28,9 @@ const SearchInput = ({ getMealByName, searchValue }: Props) => {
   }, [inputValue]);
 
   useEffect(() => {
-    if (debounceValue) {
-      getMealByName(debounceValue);
+    if (debounceValue && searchValue) {
+      dispatch(fetchMealByName(searchValue));
+
       params.set("value", debounceValue);
       setSearchParams(params);
     }
@@ -42,7 +47,7 @@ const SearchInput = ({ getMealByName, searchValue }: Props) => {
         ? setSearchParams({ p: "1", value: value })
         : setSearchParams({ p: "1" });
 
-      getMealByName(value);
+      dispatch(fetchMealByName(value));
     }
   };
 

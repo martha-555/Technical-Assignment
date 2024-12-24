@@ -1,6 +1,6 @@
 /** @format */
 
-import { RecipeCardType } from "../types/types";
+import { RecipeCardType } from "../../types/types";
 
 export const filteredResponseData = async (response: Response) => {
   const data = await response.json();
