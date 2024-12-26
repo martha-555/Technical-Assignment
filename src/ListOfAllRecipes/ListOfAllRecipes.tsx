@@ -1,12 +1,6 @@
 /** @format */
 
-import React, {
-  useCallback,
-  useEffect,
-  useMemo,
-  useRef,
-  useState,
-} from "react";
+import { useEffect } from "react";
 import classes from "./styles.module.css";
 import { RecipeCardType } from "../types/types";
 import Pagination from "../Pagination/Pagination";
@@ -17,29 +11,19 @@ import SearchInput from "./SearchInput";
 import { fetchMealByName } from "../store/fetch/fetchMealByName";
 import { fetchAllRecipes } from "../store/fetch/fetchAllRecipes";
 import { useDispatch, useSelector } from "react-redux";
-
+import { getVisibilityRecipes } from "../store/reduxSlice";
 import { AppDispatch, RootState } from "../store/store";
 
 const ListOffetchAllRecipes = () => {
-  const [visibilityRecipe, setVisibilityRecipe] = useState<RecipeCardType[]>(
-    []
-  );
   const [searchParams] = useSearchParams();
-  const currentPage = searchParams.get("p") || 1;
   const searchValue = searchParams.get("value");
 
-  const PAGE_SIZE = 10;
-  const { recipes, loading, error, recipesByName } = useSelector(
-    (state: RootState) => state.recipes
-  );
+  const { recipes, loading, recipesByName, currentPage, visibilityRecipes } =
+    useSelector((state: RootState) => state.recipes);
   const dispatch = useDispatch<AppDispatch>();
 
   const updateVisibilityRecipe = (data: RecipeCardType[]) => {
-    +currentPage === 1
-      ? setVisibilityRecipe(data?.slice(0, PAGE_SIZE))
-      : setVisibilityRecipe(
-          data?.slice((+currentPage - 1) * PAGE_SIZE, +currentPage * PAGE_SIZE)
-        );
+    dispatch(getVisibilityRecipes(data));
   };
 
   useEffect(() => {
@@ -50,18 +34,12 @@ const ListOffetchAllRecipes = () => {
   }, [searchValue, dispatch]);
 
   useEffect(() => {
-    // if (searchValue) dispatch(fetchMealByName(searchValue));
-  }, [dispatch, searchValue]);
-
-  useEffect(() => {
     searchValue
       ? updateVisibilityRecipe(recipesByName)
       : updateVisibilityRecipe(recipes);
   }, [recipes, recipesByName, loading, currentPage, searchValue]);
 
-  useEffect(() => {
-    // console.log(recipesByName);
-  }, [recipes, recipesByName]);
+  useEffect(() => {}, [recipes, recipesByName, visibilityRecipes, currentPage]);
 
   return (
     <PageWrapper>
@@ -71,7 +49,7 @@ const ListOffetchAllRecipes = () => {
           {loading ? (
             <div>Loading...</div>
           ) : (
-            visibilityRecipe?.map((recipe, index) => (
+            visibilityRecipes?.map((recipe, index) => (
               <Card key={index} recipe={recipe} />
             )) || <div>За Вашим запитом нічого не знайдено </div>
           )}
@@ -84,7 +62,6 @@ const ListOffetchAllRecipes = () => {
               (!searchValue && recipes?.length) ||
               0
             }
-            pageSize={PAGE_SIZE}
           />
         )}
       </div>

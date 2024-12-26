@@ -1,21 +1,24 @@
 /** @format */
-import { useEffect } from "react";
+
 import { useSearchParams } from "react-router-dom";
 import classes from "./styles.module.css";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../store/store";
+import { useEffect } from "react";
+import { setCurrentPage } from "../store/reduxSlice";
 
 type Props = {
   numberOfRecipes: number;
-  pageSize: number;
 };
 
-const Pagination = (props: Props) => {
+const Pagination = ({ numberOfRecipes }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
-
+  const { pageSize } = useSelector((state: RootState) => state.recipes);
   const newParams = new URLSearchParams(searchParams);
   const currentPage = searchParams.get("p") || 1;
-  const totalPages = Math.ceil(props.numberOfRecipes / props.pageSize);
-  const searchValue = searchParams.get("value");
+  const totalPages = Math.ceil(+numberOfRecipes / pageSize);
   const pageNumbers: number[] = [];
+  const dispatch = useDispatch<AppDispatch>();
 
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
@@ -26,6 +29,12 @@ const Pagination = (props: Props) => {
     newParams.set("p", page.toString());
     setSearchParams(newParams);
   };
+
+  useEffect(() => {
+    const page = searchParams.get("p") || 1;
+    dispatch(setCurrentPage(page));
+  }, [searchParams.get("p")]);
+
   const firstPage = pageNumbers.splice(0, 3);
   const lastPage = pageNumbers.splice(pageNumbers.length - 1, 1);
 

@@ -28,10 +28,11 @@ const SearchInput = ({ searchValue }: Props) => {
   }, [inputValue]);
 
   useEffect(() => {
-    if (debounceValue && searchValue) {
-      dispatch(fetchMealByName(searchValue));
-
+    if (debounceValue) {
       params.set("value", debounceValue);
+      dispatch(fetchMealByName(debounceValue));
+
+      params.set("p", "1");
       setSearchParams(params);
     }
   }, [debounceValue]);
