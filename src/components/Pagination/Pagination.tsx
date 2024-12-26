@@ -3,9 +3,9 @@
 import { useSearchParams } from "react-router-dom";
 import classes from "./styles.module.css";
 import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../store/store";
+import { AppDispatch, RootState } from "../../store/store";
 import { useEffect } from "react";
-import { setCurrentPage } from "../store/reduxSlice";
+import { setCurrentPage } from "../../store/reduxSlice";
 
 type Props = {
   numberOfRecipes: number;

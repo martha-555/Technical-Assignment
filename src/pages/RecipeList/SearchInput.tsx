@@ -3,9 +3,9 @@
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import classes from "./styles.module.css";
-import { fetchMealByName } from "../store/fetch/fetchMealByName";
+import { fetchMealByName } from "../../store/fetch/fetchMealByName";
 import { useDispatch } from "react-redux";
-import { AppDispatch } from "../store/store";
+import { AppDispatch } from "../../store/store";
 
 type Props = {
   searchValue: string | null;

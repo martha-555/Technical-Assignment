@@ -2,19 +2,19 @@
 
 import { useEffect } from "react";
 import classes from "./styles.module.css";
-import { RecipeCardType } from "../types/types";
-import Pagination from "../Pagination/Pagination";
+import { RecipeCardType } from "../../types/types";
+import Pagination from "../../components/Pagination/Pagination";
 import { useSearchParams } from "react-router-dom";
-import Card from "../Card/Card";
-import PageWrapper from "../PageWrapper/PageWrapper";
+import Card from "../../components/Card/Card";
+import PageWrapper from "../../components/PageWrapper/PageWrapper";
 import SearchInput from "./SearchInput";
-import { fetchMealByName } from "../store/fetch/fetchMealByName";
-import { fetchAllRecipes } from "../store/fetch/fetchAllRecipes";
+import { fetchMealByName } from "../../store/fetch/fetchMealByName";
+import { fetchAllRecipes } from "../../store/fetch/fetchAllRecipes";
 import { useDispatch, useSelector } from "react-redux";
-import { getVisibilityRecipes } from "../store/reduxSlice";
-import { AppDispatch, RootState } from "../store/store";
+import { getVisibilityRecipes } from "../../store/reduxSlice";
+import { AppDispatch, RootState } from "../../store/store";
 
-const ListOffetchAllRecipes = () => {
+const RecipeList = () => {
   const [searchParams] = useSearchParams();
   const searchValue = searchParams.get("value");
 
@@ -69,4 +69,4 @@ const ListOffetchAllRecipes = () => {
   );
 };
 
-export default ListOffetchAllRecipes;
+export default RecipeList;

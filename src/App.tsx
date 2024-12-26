@@ -3,17 +3,17 @@
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import ListOfAllRecipes from "./ListOfAllRecipes/ListOfAllRecipes";
-import SelectedRecipe from "./SelectedRecipe/SelectedRecipe";
+import SelectedRecipe from "./pages/SelectedRecipe/SelectedRecipe";
+import RecipeList from "./pages/RecipeList/RecipeList";
 
 const routers = createBrowserRouter([
   {
     path: "*",
-    element: <ListOfAllRecipes />,
+    element: <RecipeList />,
   },
   {
     path: "/all_recipes",
-    element: <ListOfAllRecipes />,
+    element: <RecipeList />,
   },
   {
     path: "/favorite",

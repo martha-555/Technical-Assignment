@@ -1,6 +1,6 @@
 /** @format */
 
-import PageWrapper from "../PageWrapper/PageWrapper";
+import PageWrapper from "../../components/PageWrapper/PageWrapper";
 
 const SelectedRecipe = () => {
   return <PageWrapper>favorite</PageWrapper>;

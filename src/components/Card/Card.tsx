@@ -1,6 +1,6 @@
 /** @format */
 
-import { RecipeCardType } from "../types/types";
+import { RecipeCardType } from "../../types/types";
 import classes from "./styles.module.css";
 
 type Props = {
