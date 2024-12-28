@@ -11,7 +11,7 @@ const Layout = () => {
           <Link to="/all_recipes">All recipes</Link>
         </li>
         <li>
-          <Link to="/favorite">Favorite recipes</Link>
+          <Link to="/selected">Selected recipes</Link>
         </li>
       </nav>
     </div>

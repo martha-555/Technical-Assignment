@@ -4,42 +4,50 @@ import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
 import classes from "./styles.module.css";
 import { fetchMealByName } from "../../store/fetch/fetchMealByName";
-import { useDispatch } from "react-redux";
-import { AppDispatch } from "../../store/store";
+import { useDispatch, useSelector } from "react-redux";
+import { AppDispatch, RootState } from "../../store/store";
+import { getValueParam, getVisibilityRecipes } from "../../store/reduxSlice";
+import { useDebounceSearch } from "../../hooks/useDebounceSearch";
 
-type Props = {
-  searchValue: string | null;
-};
-
-const SearchInput = ({ searchValue }: Props) => {
+const SearchInput = () => {
   const [inputValue, setInputValue] = useState("");
-  const [debounceValue, setDebounceValue] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const params = new URLSearchParams(searchParams);
-
+  const { valueParam, visibilityRecipes, recipesByName, pageParam, loading } =
+    useSelector((state: RootState) => state.recipes);
   const dispatch = useDispatch<AppDispatch>();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setDebounceValue(inputValue);
-    }, 3000);
+    dispatch(getValueParam(searchParams.get("value")));
+  }, [searchParams, dispatch]);
 
-    return () => clearTimeout(timer);
-  }, [inputValue]);
+  // useEffect(() => {
+  //   const timer = setTimeout(() => {
+  //     setDebounceValue(inputValue);
+  //   }, 3000);
+
+  //   return () => clearTimeout(timer);
+  // }, [inputValue]);
+
+  const debounce = useDebounceSearch(inputValue);
 
   useEffect(() => {
-    if (debounceValue) {
-      params.set("value", debounceValue);
-      dispatch(fetchMealByName(debounceValue));
+    console.log({ recipesByName });
+    dispatch(getVisibilityRecipes(recipesByName));
+  }, [recipesByName, pageParam]);
 
+  useEffect(() => {
+    if (debounce) {
+      params.set("value", debounce);
       params.set("p", "1");
       setSearchParams(params);
+      dispatch(fetchMealByName(debounce));
     }
-  }, [debounceValue]);
+  }, [debounce]);
 
   useEffect(() => {
-    if (!searchValue) setInputValue("");
-  }, [searchValue]);
+    if (!valueParam) setInputValue("");
+  }, [valueParam]);
 
   const handleSearchClick = (e: React.KeyboardEvent<HTMLInputElement>) => {
     let value = (e.target as HTMLInputElement).value;
@@ -47,10 +55,12 @@ const SearchInput = ({ searchValue }: Props) => {
       value
         ? setSearchParams({ p: "1", value: value })
         : setSearchParams({ p: "1" });
-
-      dispatch(fetchMealByName(value));
     }
   };
+
+  useEffect(() => {
+    if (valueParam) dispatch(fetchMealByName(valueParam));
+  }, [valueParam, pageParam]);
 
   const onInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = (e.target as HTMLInputElement).value;
@@ -66,7 +76,7 @@ const SearchInput = ({ searchValue }: Props) => {
         type="search"
         onKeyDown={handleSearchClick}
       />
-      <span>{searchValue}</span>
+      <span>{valueParam}</span>
     </div>
   );
 };

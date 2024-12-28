@@ -3,21 +3,21 @@
 import "./App.css";
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
-import SelectedRecipe from "./pages/SelectedRecipe/SelectedRecipe";
-import RecipeList from "./pages/RecipeList/RecipeList";
+import SelectedRecipes from "./pages/SelectedRecipes/SelectedRecipes";
+import ListOfAllRecipes from "./pages/ListOfAllRecipes/ListOfAllRecipes";
 
 const routers = createBrowserRouter([
   {
     path: "*",
-    element: <RecipeList />,
+    element: <ListOfAllRecipes />,
   },
   {
     path: "/all_recipes",
-    element: <RecipeList />,
+    element: <ListOfAllRecipes />,
   },
   {
-    path: "/favorite",
-    element: <SelectedRecipe />,
+    path: "/selected",
+    element: <SelectedRecipes />,
   },
 ]);
 function App() {

@@ -10,20 +10,24 @@ type RecipeState = {
   recipes: RecipeCardType[];
   recipesByName: RecipeCardType[];
   visibilityRecipes: RecipeCardType[];
+  savedRecipes: RecipeCardType[];
   loading: boolean;
   error: string | null;
-  currentPage: string;
   pageSize: number;
+  valueParam: string | null;
+  pageParam: string;
 };
 
 const initialState: RecipeState = {
   recipes: [],
   recipesByName: [],
   visibilityRecipes: [],
+  savedRecipes: JSON.parse(localStorage.getItem("saved") || "[]"),
   loading: true,
   error: null,
-  currentPage: "1",
   pageSize: 10,
+  valueParam: null,
+  pageParam: "1",
 };
 
 const handlePending = (state: RecipeState) => {
@@ -43,15 +47,31 @@ const reduxSlice = createSlice({
   initialState,
   reducers: {
     getVisibilityRecipes: (state, action) => {
-      +state.currentPage === 1
+      state.pageParam == "1"
         ? (state.visibilityRecipes = action.payload?.slice(0, state.pageSize))
         : (state.visibilityRecipes = action.payload?.slice(
-            (+state.currentPage - 1) * state.pageSize,
-            +state.currentPage * state.pageSize
+            (+state.pageParam - 1) * state.pageSize,
+            +state.pageParam * state.pageSize
           ));
+      state.loading = false;
     },
-    setCurrentPage: (state, action) => {
-      state.currentPage = action.payload;
+
+    setRecipe: (state, action) => {
+      state.savedRecipes = [...state.savedRecipes, action.payload];
+      localStorage.setItem("saved", JSON.stringify(state.savedRecipes));
+    },
+    deleteRecipe: (state, action) => {
+      state.savedRecipes = state.savedRecipes.filter(
+        (item) => item.idMeal !== action.payload.idMeal
+      );
+      localStorage.setItem("saved", JSON.stringify(state.savedRecipes));
+    },
+    getValueParam: (state, action) => {
+      state.valueParam = action.payload;
+      // state.loading = false;
+    },
+    getPageParam: (state, action) => {
+      state.pageParam = action.payload;
     },
   },
   extraReducers: (builder) => {
@@ -64,12 +84,17 @@ const reduxSlice = createSlice({
     builder.addCase(fetchMealByName.pending, handlePending);
     builder.addCase(fetchMealByName.fulfilled, (state, action) => {
       state.recipesByName = action.payload;
-
       state.loading = false;
     });
     builder.addCase(fetchMealByName.rejected, handleRejected);
   },
 });
 
-export const { getVisibilityRecipes, setCurrentPage } = reduxSlice.actions;
+export const {
+  getVisibilityRecipes,
+  setRecipe,
+  deleteRecipe,
+  getValueParam,
+  getPageParam,
+} = reduxSlice.actions;
 export default reduxSlice.reducer;
