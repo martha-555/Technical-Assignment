@@ -4,7 +4,6 @@ import { createSlice, PayloadAction, SerializedError } from "@reduxjs/toolkit";
 import { fetchAllRecipes } from "./fetch/fetchAllRecipes";
 import { RecipeCardType } from "../types/types";
 import { fetchMealByName } from "./fetch/fetchMealByName";
-import { useSearchParams } from "react-router-dom";
 
 type RecipeState = {
   recipes: RecipeCardType[];
@@ -53,7 +52,6 @@ const reduxSlice = createSlice({
             (+state.pageParam - 1) * state.pageSize,
             +state.pageParam * state.pageSize
           ));
-      state.loading = false;
     },
 
     setRecipe: (state, action) => {
@@ -68,10 +66,12 @@ const reduxSlice = createSlice({
     },
     getValueParam: (state, action) => {
       state.valueParam = action.payload;
-      // state.loading = false;
     },
     getPageParam: (state, action) => {
       state.pageParam = action.payload;
+    },
+    setLoading: (state) => {
+      if (state.loading) state.loading = false;
     },
   },
   extraReducers: (builder) => {
@@ -96,5 +96,6 @@ export const {
   deleteRecipe,
   getValueParam,
   getPageParam,
+  setLoading,
 } = reduxSlice.actions;
 export default reduxSlice.reducer;

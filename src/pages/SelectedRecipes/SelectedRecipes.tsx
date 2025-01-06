@@ -7,13 +7,22 @@ import SearchInput from "../ListOfAllRecipes/SearchInput";
 import RecipeList from "../../components/RecipeList/RecipeList";
 import { useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
-import { getPageParam, getVisibilityRecipes } from "../../store/reduxSlice";
+import {
+  getPageParam,
+  getVisibilityRecipes,
+  setLoading,
+} from "../../store/reduxSlice";
 
 const SelectedRecipes = () => {
-  const { savedRecipes, pageParam, visibilityRecipes, loading, valueParam } =
-    useSelector((state: RootState) => state.recipes);
+  const { savedRecipes, pageParam, valueParam } = useSelector(
+    (state: RootState) => state.recipes
+  );
   const [searchParams] = useSearchParams();
   const dispatch = useDispatch<AppDispatch>();
+
+  useEffect(() => {
+    dispatch(setLoading());
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(getPageParam(searchParams.get("p") || "1"));
@@ -21,11 +30,8 @@ const SelectedRecipes = () => {
 
   useEffect(() => {
     if (!valueParam) dispatch(getVisibilityRecipes(savedRecipes));
-    console.log({ savedRecipes });
   }, [pageParam, dispatch, savedRecipes, valueParam]);
 
-  // console.log({ loading });
-  useEffect(() => {}, [loading]);
   return (
     <PageWrapper>
       <SearchInput />

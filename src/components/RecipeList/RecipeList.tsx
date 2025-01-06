@@ -1,7 +1,5 @@
 /** @format */
 import classes from "./styles.module.css";
-import SearchInput from "../../pages/ListOfAllRecipes/SearchInput";
-import PageWrapper from "../PageWrapper/PageWrapper";
 import Card from "../Card/Card";
 import Pagination from "../Pagination/Pagination";
 import { useSelector } from "react-redux";
@@ -23,8 +21,7 @@ const RecipeList = () => {
           )) || <div>За Вашим запитом нічого не знайдено </div>
         )}
       </div>
-
-      <Pagination />
+      {!loading && <Pagination />}
     </div>
   );
 };

@@ -19,7 +19,6 @@ const Card = ({ recipe }: Props) => {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleClick = () => {
-    // console.log(recipe.strMeal);
     isFound ? dispatch(deleteRecipe(recipe)) : dispatch(setRecipe(recipe));
   };
 

@@ -4,13 +4,12 @@ import { useLocation, useSearchParams } from "react-router-dom";
 import classes from "./styles.module.css";
 import { useDispatch, useSelector } from "react-redux";
 import { AppDispatch, RootState } from "../../store/store";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { getPageParam, getValueParam } from "../../store/reduxSlice";
 
 const Pagination = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const newParams = new URLSearchParams(searchParams);
-  const [innerPart, setInnerPart] = useState([]);
   const location = useLocation();
 
   const {
@@ -25,7 +24,7 @@ const Pagination = () => {
 
   const recipeCount =
     (valueParam && recipesByName?.length) ||
-    (location.pathname == "/all_recipes" && recipes?.length) ||
+    (location.pathname == "/all_recipes" && !valueParam && recipes?.length) ||
     (location.pathname == "/selected" && savedRecipes.length) ||
     0;
 
@@ -49,26 +48,16 @@ const Pagination = () => {
       setSearchParams(newParams);
     }
   }, []);
+
   useEffect(() => {
-    // console.log(
-    //   +pageParam * pageSize - +recipeCount > 9 &&
-    //     +pageParam > 1 &&
-    //     recipeCount > 0 &&
-    //     !loading
-    // );
-    console.log({ recipeCount });
     if (
       +pageParam * pageSize - +recipeCount > 9 &&
-      +pageParam > 1 &&
-      recipeCount > 0 &&
-      !loading
+      location.pathname == "/selected"
     ) {
-      // newParams.set("p", (+pageParam - 1).toString());
-      // setSearchParams(newParams);
+      newParams.set("p", (+pageParam - 1).toString());
+      setSearchParams(newParams);
     }
   }, [recipeCount, pageParam, loading]);
-
-  useEffect(() => {}, [loading]);
 
   useEffect(() => {
     dispatch(getValueParam(searchParams.get("value")));
@@ -79,7 +68,6 @@ const Pagination = () => {
   const lastPage = pageNumbers.splice(pageNumbers.length - 1, 1);
   const pageIndex = +pageParam - 2;
 
-  console.log({ pageNumbers });
   const buttonElement = (i: number, index?: number) => {
     return (
       <button
@@ -128,64 +116,19 @@ const Pagination = () => {
   };
 
   return (
-    <div className={classes.paginationContainer}>
-      {buttonElement(firstPage[0])}
-      {totalPages > 7 ? (
-        <>{getInnerPart()}</>
-      ) : (
-        pageNumbers.map((item, index) => buttonElement(item, index))
-      )}
-      {buttonElement(lastPage[0])}
-
-      {/* {totalPages > 1 &&
-        firstPage.map((i, index) => (
-          <button
-            className={
-              pageParam == i.toString() ? classes.activePage : classes.page
-            }
-            id={i.toString()}
-            onClick={handleClick}
-            key={index}
-          >
-            {i}{" "}
-          </button>
-        ))}
-
-      {+pageParam > 4 && <span>...</span>}
-
-      {pageNumbers
-        .slice(
-          +pageParam > 6 ? +pageParam - 6 : 0,
-          +pageParam > 6 ? +pageParam - 2 : 4
-        )
-        .map((i, index) => (
-          <button
-            className={
-              pageParam == i.toString() ? classes.activePage : classes.page
-            }
-            id={i.toString()}
-            onClick={handleClick}
-            key={index}
-          >
-            {i}{" "}
-          </button>
-        ))}
-
-      {+pageParam < lastPage[0] - 1 && <span>...</span>}
-      {totalPages < 10 && <button>{lastPage[0]}</button>}
-
-      {totalPages > 10 && (
-        <button
-          className={
-            +pageParam == lastPage[0] ? classes.activePage : classes.page
-          }
-          id={lastPage[0].toString()}
-          onClick={handleClick}
-        >
-          {lastPage[0]}{" "}
-        </button>
-      )} */}
-    </div>
+    <>
+      {recipeCount ? (
+        <div className={classes.paginationContainer}>
+          {buttonElement(firstPage[0])}
+          {totalPages > 7 ? (
+            <>{getInnerPart()}</>
+          ) : (
+            pageNumbers.map((item, index) => buttonElement(item, index))
+          )}
+          {lastPage?.length > 0 ? buttonElement(lastPage[0]) : null}
+        </div>
+      ) : null}
+    </>
   );
 };
 

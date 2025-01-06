@@ -13,26 +13,17 @@ const SearchInput = () => {
   const [inputValue, setInputValue] = useState("");
   const [searchParams, setSearchParams] = useSearchParams();
   const params = new URLSearchParams(searchParams);
-  const { valueParam, visibilityRecipes, recipesByName, pageParam, loading } =
-    useSelector((state: RootState) => state.recipes);
+  const { valueParam, recipesByName, pageParam } = useSelector(
+    (state: RootState) => state.recipes
+  );
   const dispatch = useDispatch<AppDispatch>();
+  const debounce = useDebounceSearch(inputValue);
 
   useEffect(() => {
     dispatch(getValueParam(searchParams.get("value")));
   }, [searchParams, dispatch]);
 
-  // useEffect(() => {
-  //   const timer = setTimeout(() => {
-  //     setDebounceValue(inputValue);
-  //   }, 3000);
-
-  //   return () => clearTimeout(timer);
-  // }, [inputValue]);
-
-  const debounce = useDebounceSearch(inputValue);
-
   useEffect(() => {
-    console.log({ recipesByName });
     dispatch(getVisibilityRecipes(recipesByName));
   }, [recipesByName, pageParam]);
 
@@ -43,7 +34,7 @@ const SearchInput = () => {
       setSearchParams(params);
       dispatch(fetchMealByName(debounce));
     }
-  }, [debounce]);
+  }, [debounce, dispatch]);
 
   useEffect(() => {
     if (!valueParam) setInputValue("");
@@ -60,7 +51,7 @@ const SearchInput = () => {
 
   useEffect(() => {
     if (valueParam) dispatch(fetchMealByName(valueParam));
-  }, [valueParam, pageParam]);
+  }, [valueParam, pageParam, dispatch]);
 
   const onInput = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = (e.target as HTMLInputElement).value;

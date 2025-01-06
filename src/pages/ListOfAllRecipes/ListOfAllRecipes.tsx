@@ -32,8 +32,8 @@ const ListOfAllRecipes = () => {
   }, [searchParams, dispatch, loading]);
 
   useEffect(() => {
+    !valueParam && recipes?.length == 0 && dispatch(fetchAllRecipes());
     if (!loading) {
-      !valueParam && recipes?.length == 0 && dispatch(fetchAllRecipes());
     }
   }, [valueParam, dispatch, loading]);
 
@@ -41,15 +41,10 @@ const ListOfAllRecipes = () => {
     if (!valueParam) updateVisibilityRecipe(recipes);
   }, [recipes, loading, pageParam, valueParam]);
 
-  useEffect(() => {
-    // console.log({ visibilityRecipes });
-    // console.log({ recipes });
-  }, [visibilityRecipes]);
-
   return (
     <PageWrapper>
       <SearchInput />
-      <RecipeList />
+      {!loading && <RecipeList />}
     </PageWrapper>
   );
 };
