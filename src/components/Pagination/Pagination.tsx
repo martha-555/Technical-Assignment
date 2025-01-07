@@ -2,35 +2,22 @@
 
 import { useLocation, useSearchParams } from "react-router-dom";
 import classes from "./styles.module.css";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../store/store";
 import { useEffect } from "react";
-import { getPageParam, getValueParam } from "../../store/reduxSlice";
+import { PAGE_SIZE } from "../../constants/constants";
 
-const Pagination = () => {
+type Props = {
+  recipeCount: number;
+};
+
+const Pagination = ({ recipeCount }: Props) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const newParams = new URLSearchParams(searchParams);
   const location = useLocation();
 
-  const {
-    valueParam,
-    pageParam,
-    recipesByName,
-    recipes,
-    savedRecipes,
-    pageSize,
-    loading,
-  } = useSelector((state: RootState) => state.recipes);
+  const pageParam = searchParams.get("p") || 1;
 
-  const recipeCount =
-    (valueParam && recipesByName?.length) ||
-    (location.pathname == "/all_recipes" && !valueParam && recipes?.length) ||
-    (location.pathname == "/selected" && savedRecipes.length) ||
-    0;
-
-  const totalPages = Math.ceil(+recipeCount / pageSize);
+  const totalPages = Math.ceil(+recipeCount / PAGE_SIZE);
   const pageNumbers: number[] = [];
-  const dispatch = useDispatch<AppDispatch>();
 
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
@@ -51,18 +38,13 @@ const Pagination = () => {
 
   useEffect(() => {
     if (
-      +pageParam * pageSize - +recipeCount > 9 &&
+      +pageParam * PAGE_SIZE - +recipeCount > 9 &&
       location.pathname == "/selected"
     ) {
       newParams.set("p", (+pageParam - 1).toString());
       setSearchParams(newParams);
     }
-  }, [recipeCount, pageParam, loading]);
-
-  useEffect(() => {
-    dispatch(getValueParam(searchParams.get("value")));
-    dispatch(getPageParam(searchParams.get("p") || "1"));
-  }, [searchParams, dispatch]);
+  }, [recipeCount, pageParam]);
 
   const firstPage = pageNumbers.splice(0, 1);
   const lastPage = pageNumbers.splice(pageNumbers.length - 1, 1);

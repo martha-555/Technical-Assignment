@@ -2,13 +2,15 @@
 import classes from "./styles.module.css";
 import Card from "../Card/Card";
 import Pagination from "../Pagination/Pagination";
-import { useSelector } from "react-redux";
-import { RootState } from "../../store/store";
+import { RecipeCardType } from "../../types/types";
+import { useVisibilityRecipes } from "../../hooks/useVisibilityRecipes";
 
-const RecipeList = () => {
-  const { visibilityRecipes, loading } = useSelector(
-    (state: RootState) => state.recipes
-  );
+type Props = {
+  recipes: RecipeCardType[];
+  loading: boolean;
+};
+const RecipeList = ({ recipes, loading }: Props) => {
+  const visibilityRecipes = useVisibilityRecipes(recipes, loading);
 
   return (
     <div className={classes.recipeList}>
@@ -21,7 +23,7 @@ const RecipeList = () => {
           )) || <div>За Вашим запитом нічого не знайдено </div>
         )}
       </div>
-      {!loading && <Pagination />}
+      {!loading && <Pagination recipeCount={recipes.length} />}
     </div>
   );
 };

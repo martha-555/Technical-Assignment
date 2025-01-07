@@ -5,26 +5,51 @@ import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 import SelectedRecipes from "./pages/SelectedRecipes/SelectedRecipes";
 import ListOfAllRecipes from "./pages/ListOfAllRecipes/ListOfAllRecipes";
+import { QueryClient, QueryClientProvider } from "react-query";
+import FoundRecipes from "./pages/FoundRecipes/FoundRecipes";
+import CardProvider from "./context/CardProvider";
 
 const routers = createBrowserRouter([
   {
     path: "*",
-    element: <ListOfAllRecipes />,
+    element: (
+      <CardProvider>
+        <ListOfAllRecipes />
+      </CardProvider>
+    ),
   },
   {
     path: "/all_recipes",
-    element: <ListOfAllRecipes />,
+    element: (
+      <CardProvider>
+        <ListOfAllRecipes />
+      </CardProvider>
+    ),
   },
   {
     path: "/selected",
-    element: <SelectedRecipes />,
+    element: (
+      <CardProvider>
+        <SelectedRecipes />
+      </CardProvider>
+    ),
+  },
+  {
+    path: "/found",
+    element: (
+      <CardProvider>
+        <FoundRecipes />
+      </CardProvider>
+    ),
   },
 ]);
 function App() {
+  const queryClient = new QueryClient();
+
   return (
-    <div>
+    <QueryClientProvider client={queryClient}>
       <RouterProvider router={routers}></RouterProvider>
-    </div>
+    </QueryClientProvider>
   );
 }
 

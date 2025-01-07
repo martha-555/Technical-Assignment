@@ -1,11 +1,9 @@
 /** @format */
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { RecipeCardType } from "../../types/types";
 import classes from "./styles.module.css";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../store/store";
-import { deleteRecipe, setRecipe } from "../../store/reduxSlice";
+import { CardContext } from "../../context/CardProvider";
 
 type Props = {
   recipe: RecipeCardType;
@@ -13,19 +11,18 @@ type Props = {
 
 const Card = ({ recipe }: Props) => {
   const [isFound, setIsFound] = useState<boolean>(false);
-  const { savedRecipes, loading } = useSelector(
-    (state: RootState) => state.recipes
-  );
-  const dispatch = useDispatch<AppDispatch>();
+  const contextData = useContext(CardContext);
+  const savedRecipes = contextData.savedRecipes;
 
   const handleClick = () => {
-    isFound ? dispatch(deleteRecipe(recipe)) : dispatch(setRecipe(recipe));
+    isFound ? contextData.deleteRecipe(recipe) : contextData.addRecipe(recipe);
   };
 
   useEffect(() => {
     const isFoundRecipe = savedRecipes.find(
       (item) => item.idMeal === recipe.idMeal
     );
+
     isFoundRecipe ? setIsFound(true) : setIsFound(false);
   }, [savedRecipes, isFound, recipe]);
 
