@@ -39,19 +39,21 @@ const CardDetails = () => {
   return (
     <PageWrapper>
       <SearchInput />
-      {isLoading ? (
-        <div>Loading...</div>
-      ) : (
-        <div className={classes.detailsContainer}>
-          <img src={image} alt="" />
-          {Object.entries(mealDetails).map(([key, value], index) => (
-            <div
-              key={index}
-              className={classes.detailsCard}
-            >{`${key} : ${value}`}</div>
-          ))}
-        </div>
-      )}
+      <div className={classes.detailsContainer}>
+        {isLoading ? (
+          <div>Loading...</div>
+        ) : (
+          <div className={classes.detailsCard}>
+            <img src={image} alt="" />
+            {Object.entries(mealDetails).map(([key, value], index) => (
+              <div
+                key={index}
+                className={classes.details}
+              >{`${key} : ${value}`}</div>
+            ))}
+          </div>
+        )}
+      </div>
     </PageWrapper>
   );
 };

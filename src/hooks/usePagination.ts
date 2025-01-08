@@ -20,7 +20,6 @@ export const usePagination = (recipeCount: number) => {
     setCurrentPage(value);
     newParams.set("p", value);
     setSearchParams(newParams);
-    console.log(searchParams.get("p"));
   };
 
   useEffect(() => {
