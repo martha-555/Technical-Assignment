@@ -1,7 +1,11 @@
 /** @format */
+.searchContainer {
+  padding: 40px;
+}
 
 .searchInput {
-  margin: 20px 20px 20px 60px;
+  margin: 0 auto;
+  display: block;
   width: 300px;
   padding: 5px 15px;
   border: 2px solid #3d3d3d;
@@ -20,4 +24,9 @@
 .searchInput:focus {
   border-color: #5c646d;
   box-shadow: 0 0 8px rgba(0, 123, 255, 0.5);
+}
+
+.queryParam {
+  text-align: center;
+  font-size: 20px;
 }

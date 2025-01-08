@@ -8,6 +8,7 @@ import ListOfAllRecipes from "./pages/ListOfAllRecipes/ListOfAllRecipes";
 import { QueryClient, QueryClientProvider } from "react-query";
 import FoundRecipes from "./pages/FoundRecipes/FoundRecipes";
 import CardProvider from "./context/CardProvider";
+import CardDetails from "./pages/CardDetails/CardDetails";
 
 const routers = createBrowserRouter([
   {
@@ -39,6 +40,14 @@ const routers = createBrowserRouter([
     element: (
       <CardProvider>
         <FoundRecipes />
+      </CardProvider>
+    ),
+  },
+  {
+    path: "/details",
+    element: (
+      <CardProvider>
+        <CardDetails />
       </CardProvider>
     ),
   },

@@ -1,23 +1,20 @@
 /** @format */
 
-import { useLocation, useSearchParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import classes from "./styles.module.css";
-import { useEffect } from "react";
+import { useEffect, useMemo } from "react";
 import { PAGE_SIZE } from "../../constants/constants";
+import { usePagination } from "../../hooks/usePagination";
 
 type Props = {
   recipeCount: number;
 };
 
 const Pagination = ({ recipeCount }: Props) => {
-  const [searchParams, setSearchParams] = useSearchParams();
-  const newParams = new URLSearchParams(searchParams);
   const location = useLocation();
-
-  const pageParam = searchParams.get("p") || 1;
-
-  const totalPages = Math.ceil(+recipeCount / PAGE_SIZE);
   const pageNumbers: number[] = [];
+  const { totalPages, currentPage, changeCurrentPage } =
+    usePagination(recipeCount);
 
   for (let i = 1; i <= totalPages; i++) {
     pageNumbers.push(i);
@@ -25,36 +22,36 @@ const Pagination = ({ recipeCount }: Props) => {
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
     const page = (e.target as HTMLButtonElement).innerText;
-    newParams.set("p", page.toString());
-    setSearchParams(newParams);
+    changeCurrentPage(page);
   };
 
   useEffect(() => {
-    if (!searchParams.get("p")) {
-      newParams.set("p", "1");
-      setSearchParams(newParams);
+    if (!currentPage) {
+      changeCurrentPage("1");
     }
   }, []);
 
   useEffect(() => {
     if (
-      +pageParam * PAGE_SIZE - +recipeCount > 9 &&
+      +currentPage * PAGE_SIZE - +recipeCount > 9 &&
       location.pathname == "/selected"
     ) {
-      newParams.set("p", (+pageParam - 1).toString());
-      setSearchParams(newParams);
+      changeCurrentPage((+currentPage - 1).toString());
     }
-  }, [recipeCount, pageParam]);
+  }, [recipeCount, currentPage]);
 
-  const firstPage = pageNumbers.splice(0, 1);
-  const lastPage = pageNumbers.splice(pageNumbers.length - 1, 1);
-  const pageIndex = +pageParam - 2;
+  const firstPage = useMemo(() => pageNumbers.splice(0, 1), [pageNumbers]);
+  const lastPage = useMemo(
+    () => pageNumbers.splice(pageNumbers.length - 1, 1),
+    [pageNumbers]
+  );
+  const pageIndex = useMemo(() => +currentPage - 2, [currentPage]);
 
   const buttonElement = (i: number, index?: number) => {
     return (
       <button
         className={
-          pageParam == i?.toString() ? classes.activePage : classes.page
+          currentPage == i?.toString() ? classes.activePage : classes.page
         }
         id={i?.toString()}
         onClick={handleClick}
@@ -66,7 +63,7 @@ const Pagination = ({ recipeCount }: Props) => {
   };
 
   const getInnerPart = () => {
-    if (+pageParam >= 5 && +pageParam < pageNumbers.length - 1) {
+    if (+currentPage >= 5 && +currentPage < pageNumbers.length - 1) {
       const part = pageNumbers.slice(pageIndex - 2, pageIndex + 3);
       return (
         <>
@@ -75,7 +72,7 @@ const Pagination = ({ recipeCount }: Props) => {
           <span>...</span>
         </>
       );
-    } else if (+pageParam <= 5) {
+    } else if (+currentPage <= 5) {
       const part = pageNumbers.slice(0, 5);
       return (
         <>
@@ -88,6 +85,7 @@ const Pagination = ({ recipeCount }: Props) => {
         pageNumbers.length - 5,
         pageNumbers.length
       );
+
       return (
         <>
           <span>...</span>

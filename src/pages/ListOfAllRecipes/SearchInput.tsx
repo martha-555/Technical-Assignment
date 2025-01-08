@@ -15,7 +15,6 @@ const SearchInput = () => {
 
   useEffect(() => {
     if (debounce) {
-      console.log({ debounce });
       params.set("query", debounce);
       setSearchParams(params);
     }
@@ -23,7 +22,7 @@ const SearchInput = () => {
 
   useEffect(() => {
     if (queryParam && (debounce || inputValue)) {
-      navigate(`/found?query=${encodeURIComponent(queryParam)}`);
+      navigate(`/found?query=${queryParam}`);
     } else {
       setInputValue("");
     }
@@ -32,7 +31,10 @@ const SearchInput = () => {
   const handleSearchClick = (e: React.KeyboardEvent<HTMLInputElement>) => {
     let value = (e.target as HTMLInputElement).value;
     if (e.key === "Enter") {
-      if (value) setSearchParams({ p: "1", query: value });
+      if (value) {
+        params.set("query", value);
+        setSearchParams(params);
+      }
     }
   };
 
@@ -41,7 +43,7 @@ const SearchInput = () => {
     setInputValue(value);
   };
   return (
-    <div>
+    <div className={classes.searchContainer}>
       <input
         value={inputValue}
         onInput={onInput}
@@ -50,7 +52,7 @@ const SearchInput = () => {
         type="search"
         onKeyDown={handleSearchClick}
       />
-      <span>{queryParam}</span>
+      <div className={classes.queryParam}>{queryParam}</div>
     </div>
   );
 };

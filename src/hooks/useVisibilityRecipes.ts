@@ -17,7 +17,6 @@ export const useVisibilityRecipes = (
 
   useEffect(() => {
     if (!loading) {
-      console.log("хучок");
       pageParam == "1"
         ? setVisibilityRecipes(data?.slice(0, PAGE_SIZE))
         : setVisibilityRecipes(

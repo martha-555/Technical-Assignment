@@ -18,9 +18,10 @@ const RecipeList = ({ recipes, loading }: Props) => {
         {loading ? (
           <div>Loading...</div>
         ) : (
-          visibilityRecipes?.map((recipe, index) => (
-            <Card key={index} recipe={recipe} />
-          )) || <div>За Вашим запитом нічого не знайдено </div>
+          (visibilityRecipes.length > 0 &&
+            visibilityRecipes?.map((recipe, index) => (
+              <Card key={index} recipe={recipe} />
+            ))) || <div>За Вашим запитом нічого не знайдено </div>
         )}
       </div>
       {!loading && <Pagination recipeCount={recipes.length} />}
