@@ -11,7 +11,6 @@ type Props = {
 };
 const RecipeList = ({ recipes, loading }: Props) => {
   const visibilityRecipes = useVisibilityRecipes(recipes, loading);
-
   return (
     <div className={classes.recipeList}>
       <div className={classes.cardContainer}>

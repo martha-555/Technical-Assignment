@@ -2,7 +2,7 @@
 
 import { useLocation } from "react-router-dom";
 import classes from "./styles.module.css";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { PAGE_SIZE } from "../../constants/constants";
 import { usePagination } from "../../hooks/usePagination";
 
@@ -11,45 +11,47 @@ type Props = {
 };
 
 const Pagination = ({ recipeCount }: Props) => {
-  const location = useLocation();
-  const pageNumbers: number[] = [];
   const { totalPages, currentPage, changeCurrentPage } =
     usePagination(recipeCount);
+  const [pageNumbers, setPageNumbers] = useState<number[]>([]);
+  const filteredPageNumbers = useRef<number[]>([]);
+  const firstPage = useRef<number[]>([]);
+  const lastPage = useRef<number[]>([]);
 
-  for (let i = 1; i <= totalPages; i++) {
-    pageNumbers.push(i);
-  }
+  useEffect(() => {
+    filteredPageNumbers.current = [];
+    const numberOfPage = [];
+
+    for (let i = 1; i <= totalPages; i++) {
+      numberOfPage.push(i);
+      filteredPageNumbers.current.push(i);
+    }
+
+    firstPage.current = filteredPageNumbers.current.splice(0, 1);
+    lastPage.current = filteredPageNumbers.current.splice(
+      filteredPageNumbers.current.length - 1,
+      1
+    );
+    setPageNumbers(numberOfPage);
+  }, [totalPages]);
 
   const handleClick = (e: React.MouseEvent<HTMLButtonElement>) => {
-    const page = (e.target as HTMLButtonElement).innerText;
-    changeCurrentPage(page);
+    const page = (e.target as HTMLButtonElement).getAttribute("data-page");
+    changeCurrentPage(page || "1");
   };
 
   useEffect(() => {
-    if (!currentPage) {
-      changeCurrentPage("1");
-    }
-  }, []);
-
-  useEffect(() => {
-    if (
-      +currentPage * PAGE_SIZE - +recipeCount > 9 &&
-      location.pathname == "/selected"
-    ) {
+    if (pageNumbers.length > 0 && !pageNumbers.includes(+currentPage)) {
       changeCurrentPage((+currentPage - 1).toString());
     }
-  }, [recipeCount, currentPage]);
+  }, [pageNumbers]);
 
-  const firstPage = useMemo(() => pageNumbers.splice(0, 1), [pageNumbers]);
-  const lastPage = useMemo(
-    () => pageNumbers.splice(pageNumbers.length - 1, 1),
-    [pageNumbers]
-  );
   const pageIndex = useMemo(() => +currentPage - 2, [currentPage]);
 
   const buttonElement = (i: number, index?: number) => {
     return (
       <button
+        data-page={i}
         className={
           currentPage == i?.toString() ? classes.activePage : classes.page
         }
@@ -63,8 +65,14 @@ const Pagination = ({ recipeCount }: Props) => {
   };
 
   const getInnerPart = () => {
-    if (+currentPage >= 5 && +currentPage < pageNumbers.length - 1) {
-      const part = pageNumbers.slice(pageIndex - 2, pageIndex + 3);
+    if (
+      +currentPage >= 5 &&
+      +currentPage < filteredPageNumbers.current.length - 1
+    ) {
+      const part = filteredPageNumbers.current.slice(
+        pageIndex - 2,
+        pageIndex + 3
+      );
       return (
         <>
           <span>...</span>
@@ -73,7 +81,7 @@ const Pagination = ({ recipeCount }: Props) => {
         </>
       );
     } else if (+currentPage <= 5) {
-      const part = pageNumbers.slice(0, 5);
+      const part = filteredPageNumbers.current.slice(0, 5);
       return (
         <>
           {part.map((i, index) => buttonElement(i, index))}
@@ -81,9 +89,9 @@ const Pagination = ({ recipeCount }: Props) => {
         </>
       );
     } else {
-      const part = pageNumbers.slice(
-        pageNumbers.length - 5,
-        pageNumbers.length
+      const part = filteredPageNumbers.current.slice(
+        filteredPageNumbers.current.length - 5,
+        filteredPageNumbers.current.length
       );
 
       return (
@@ -99,13 +107,17 @@ const Pagination = ({ recipeCount }: Props) => {
     <>
       {recipeCount ? (
         <div className={classes.paginationContainer}>
-          {buttonElement(firstPage[0])}
+          {buttonElement(firstPage.current[0])}
           {totalPages > 7 ? (
             <>{getInnerPart()}</>
           ) : (
-            pageNumbers.map((item, index) => buttonElement(item, index))
+            filteredPageNumbers.current.map((item, index) =>
+              buttonElement(item, index)
+            )
           )}
-          {lastPage?.length > 0 ? buttonElement(lastPage[0]) : null}
+          {lastPage.current?.length > 0
+            ? buttonElement(lastPage.current[0])
+            : null}
         </div>
       ) : null}
     </>
