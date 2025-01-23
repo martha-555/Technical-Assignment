@@ -16,7 +16,7 @@ const FoundRecipes = () => {
 
   return (
     <PageWrapper>
-      <SearchInput />
+      {/* <SearchInput /> */}
       <RecipeList recipes={data || []} loading={isLoading} />
     </PageWrapper>
   );

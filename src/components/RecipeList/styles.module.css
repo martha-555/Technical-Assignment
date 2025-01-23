@@ -11,4 +11,12 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
+  gap: 20px;
+  margin: 20px 0;
+}
+
+.queryParam {
+  text-align: center;
+  text-decoration: underline;
+  font-size: 25px;
 }

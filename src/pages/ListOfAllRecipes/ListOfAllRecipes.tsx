@@ -11,7 +11,6 @@ const ListOfAllRecipes = () => {
 
   return (
     <PageWrapper>
-      <SearchInput />
       {<RecipeList recipes={data || []} loading={isLoading} />}
     </PageWrapper>
   );

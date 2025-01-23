@@ -1,16 +1,39 @@
 /** @format */
 
-import { useLocation } from "react-router-dom";
 import classes from "./styles.module.css";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { PAGE_SIZE } from "../../constants/constants";
 import { usePagination } from "../../hooks/usePagination";
+import * as React from "react";
+import { MemoryRouter, Route, Routes, useLocation } from "react-router";
+import Pagination from "@mui/material/Pagination";
+import PaginationItem from "@mui/material/PaginationItem";
+import { Link } from "react-router-dom";
 
 type Props = {
   recipeCount: number;
 };
 
-const Pagination = ({ recipeCount }: Props) => {
+function Content() {
+  const location = useLocation();
+  const query = new URLSearchParams(location.search);
+  const page = parseInt(query.get("page") || "1", 10);
+  return (
+    <Pagination
+      page={page}
+      count={10}
+      renderItem={(item) => (
+        <PaginationItem
+          component={Link}
+          to={`/inbox${item.page === 1 ? "" : `?page=${item.page}`}`}
+          {...item}
+        />
+      )}
+    />
+  );
+}
+
+const CardPagination = ({ recipeCount }: Props) => {
   const { totalPages, currentPage, changeCurrentPage } =
     usePagination(recipeCount);
   const [pageNumbers, setPageNumbers] = useState<number[]>([]);
@@ -124,4 +147,4 @@ const Pagination = ({ recipeCount }: Props) => {
   );
 };
 
-export default Pagination;
+export default CardPagination;

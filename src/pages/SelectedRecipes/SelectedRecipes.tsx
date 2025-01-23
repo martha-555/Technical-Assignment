@@ -12,7 +12,6 @@ const SelectedRecipes = () => {
 
   return (
     <PageWrapper>
-      <SearchInput />
       <RecipeList recipes={savedRecipes} loading={false} />
     </PageWrapper>
   );

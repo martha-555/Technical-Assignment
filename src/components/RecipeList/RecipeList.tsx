@@ -1,9 +1,14 @@
 /** @format */
 import classes from "./styles.module.css";
-import Card from "../Card/Card";
-import Pagination from "../Pagination/Pagination";
 import { RecipeCardType } from "../../types/types";
 import { useVisibilityRecipes } from "../../hooks/useVisibilityRecipes";
+import RecipeCard from "../RecipeCard/RecipeCard";
+import { useSearchParams } from "react-router-dom";
+import * as React from "react";
+import Stack from "@mui/material/Stack";
+import CircularProgress from "@mui/material/CircularProgress";
+import Alert from "@mui/material/Alert";
+import CardPagination from "../CardPagination/CardPagination";
 
 type Props = {
   recipes: RecipeCardType[];
@@ -11,19 +16,29 @@ type Props = {
 };
 const RecipeList = ({ recipes, loading }: Props) => {
   const visibilityRecipes = useVisibilityRecipes(recipes, loading);
+  const [searchParams] = useSearchParams();
+  const queryParam = searchParams.get("query");
+
   return (
     <div className={classes.recipeList}>
+      {queryParam && <div className={classes.queryParam}>{queryParam}</div>}
       <div className={classes.cardContainer}>
         {loading ? (
-          <div>Loading...</div>
+          <Stack sx={{ color: "grey.500" }} spacing={2} direction="row">
+            <CircularProgress color="secondary" />
+            <CircularProgress color="success" />
+            <CircularProgress color="inherit" />
+          </Stack>
         ) : (
           (visibilityRecipes.length > 0 &&
             visibilityRecipes?.map((recipe, index) => (
-              <Card key={index} recipe={recipe} />
-            ))) || <div>За Вашим запитом нічого не знайдено </div>
+              <RecipeCard key={index} recipe={recipe} />
+            ))) || (
+            <Alert severity="error">За Вашим запитом нічого не знайдено</Alert>
+          )
         )}
       </div>
-      {!loading && <Pagination recipeCount={recipes.length} />}
+      {!loading && <CardPagination recipeCount={recipes.length} />}
     </div>
   );
 };
