@@ -2,7 +2,6 @@
 
 import { useSearchParams } from "react-router-dom";
 import PageWrapper from "../../components/PageWrapper/PageWrapper";
-import SearchInput from "../ListOfAllRecipes/SearchInput";
 import { useQuery } from "react-query";
 import { fetchMealByName } from "../../api/fetchMealByName";
 import RecipeList from "../../components/RecipeList/RecipeList";

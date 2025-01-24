@@ -1,6 +1,4 @@
 /** @format */
-
-import classes from "./styles.module.css";
 import { usePagination } from "../../hooks/usePagination";
 import { Route, Routes, useLocation } from "react-router";
 import Pagination from "@mui/material/Pagination";

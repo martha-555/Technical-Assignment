@@ -2,17 +2,13 @@
 
 import { useContext, useEffect, useState } from "react";
 import { RecipeCardType } from "../../types/types";
-import classes from "./styles.module.css";
 import { CardContext } from "../../context/CardProvider";
-import { useQuery } from "react-query";
-import { fetchCardDetails } from "../../api/fetchCardDetails";
 import { useNavigate } from "react-router-dom";
 import * as React from "react";
 import Card from "@mui/material/Card";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
-import Button from "@mui/material/Button";
 import CardActionArea from "@mui/material/CardActionArea";
 import CardActions from "@mui/material/CardActions";
 import FavoriteIcon from "@mui/icons-material/Favorite";

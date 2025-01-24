@@ -2,22 +2,17 @@
 
 import { createContext, ReactElement, useEffect, useState } from "react";
 import { RecipeCardType } from "../types/types";
-import { useSearchParams } from "react-router-dom";
 
 type ContextType = {
   savedRecipes: RecipeCardType[];
   addRecipe: (data: RecipeCardType) => void;
   deleteRecipe: (data: RecipeCardType) => void;
-  //   pageParam: string;
-  //   queryParam: string | null;
 };
 
 export const CardContext = createContext<ContextType>({
   savedRecipes: [],
   addRecipe: () => {},
   deleteRecipe: () => {},
-  //   pageParam: "1",
-  //   queryParam: null,
 });
 
 const CardProvider = (props: { children: ReactElement }) => {

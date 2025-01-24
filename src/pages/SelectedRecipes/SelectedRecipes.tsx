@@ -1,7 +1,6 @@
 /** @format */
 
 import PageWrapper from "../../components/PageWrapper/PageWrapper";
-import SearchInput from "../ListOfAllRecipes/SearchInput";
 import RecipeList from "../../components/RecipeList/RecipeList";
 import { useContext } from "react";
 import { CardContext } from "../../context/CardProvider";

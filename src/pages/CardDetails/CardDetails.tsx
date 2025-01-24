@@ -5,7 +5,6 @@ import PageWrapper from "../../components/PageWrapper/PageWrapper";
 import { fetchCardDetails } from "../../api/fetchCardDetails";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import classes from "./styles.module.css";
 import * as React from "react";
 import { styled } from "@mui/material/styles";
 import Card from "@mui/material/Card";

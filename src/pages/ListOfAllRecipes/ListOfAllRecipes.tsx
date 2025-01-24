@@ -1,7 +1,6 @@
 /** @format */
 
 import PageWrapper from "../../components/PageWrapper/PageWrapper";
-import SearchInput from "./SearchInput";
 import RecipeList from "../../components/RecipeList/RecipeList";
 import { useQuery } from "react-query";
 import { fetchAllRecipes } from "../../api/fetchAllRecipes";

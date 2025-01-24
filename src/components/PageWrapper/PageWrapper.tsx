@@ -20,13 +20,10 @@ import ListItemButton from "@mui/material/ListItemButton";
 import ListItemIcon from "@mui/material/ListItemIcon";
 import ListItemText from "@mui/material/ListItemText";
 import { layoutRoutes } from "../../routes/layoutRoutes";
-import BallotIcon from "@mui/icons-material/Ballot";
 import BallotTwoToneIcon from "@mui/icons-material/BallotTwoTone";
-import FavoriteIcon from "@mui/icons-material/Favorite";
 import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
-import MenuBookTwoToneIcon from "@mui/icons-material/MenuBookTwoTone";
 import logo from "../../logo/kitchen.svg";
-import { Link as RouterLink, useSearchParams } from "react-router-dom";
+import { Link as RouterLink } from "react-router-dom";
 import { Link } from "@mui/material";
 import SearchInput from "../../pages/ListOfAllRecipes/SearchInput";
 
@@ -62,7 +59,6 @@ const DrawerHeader = styled("div")(({ theme }) => ({
   alignItems: "center",
   justifyContent: "flex-end",
   padding: theme.spacing(0, 1),
-  // necessary for content to be below app bar
   ...theme.mixins.toolbar,
 }));
 

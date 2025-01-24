@@ -4,10 +4,8 @@ import { RecipeCardType } from "../../types/types";
 import { useVisibilityRecipes } from "../../hooks/useVisibilityRecipes";
 import RecipeCard from "../RecipeCard/RecipeCard";
 import { useSearchParams } from "react-router-dom";
-import * as React from "react";
 import Stack from "@mui/material/Stack";
 import CircularProgress from "@mui/material/CircularProgress";
-import Alert from "@mui/material/Alert";
 import CardPagination from "../CardPagination/CardPagination";
 
 type Props = {
