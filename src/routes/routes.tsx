@@ -16,7 +16,7 @@ export const routes = [
     ),
   },
   {
-    path: "/all_recipes",
+    path: "/all_recipes/*",
     element: (
       <CardProvider>
         <ListOfAllRecipes />
@@ -24,7 +24,7 @@ export const routes = [
     ),
   },
   {
-    path: "/selected",
+    path: "/selected/*",
     element: (
       <CardProvider>
         <SelectedRecipes />
@@ -32,7 +32,7 @@ export const routes = [
     ),
   },
   {
-    path: "/found",
+    path: "/found/*",
     element: (
       <CardProvider>
         <FoundRecipes />

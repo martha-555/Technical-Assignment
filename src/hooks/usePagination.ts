@@ -7,7 +7,7 @@ import { useSearchParams } from "react-router-dom";
 export const usePagination = (recipeCount: number) => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [currentPage, setCurrentPage] = useState<string>(
-    searchParams.get("p") || "1"
+    searchParams.get("page") || "1"
   );
   const newParams = new URLSearchParams(searchParams);
   const totalPages = useMemo(
@@ -17,7 +17,7 @@ export const usePagination = (recipeCount: number) => {
 
   const changeCurrentPage = (value: string) => {
     setCurrentPage(value);
-    newParams.set("p", value);
+    newParams.set("page", value);
     setSearchParams(newParams);
   };
 

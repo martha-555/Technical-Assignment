@@ -6,6 +6,7 @@ import SearchInput from "../ListOfAllRecipes/SearchInput";
 import { useQuery } from "react-query";
 import { fetchMealByName } from "../../api/fetchMealByName";
 import RecipeList from "../../components/RecipeList/RecipeList";
+import Alert from "@mui/material/Alert";
 
 const FoundRecipes = () => {
   const [searhParams] = useSearchParams();
@@ -16,8 +17,11 @@ const FoundRecipes = () => {
 
   return (
     <PageWrapper>
-      {/* <SearchInput /> */}
-      <RecipeList recipes={data || []} loading={isLoading} />
+      {!isLoading && data?.length == 0 ? (
+        <Alert severity="error">За Вашим запитом нічого не знайдено</Alert>
+      ) : (
+        <RecipeList recipes={data || []} loading={isLoading} />
+      )}
     </PageWrapper>
   );
 };

@@ -10,7 +10,7 @@ export const useVisibilityRecipes = (
   loading: boolean
 ) => {
   const [searchParams] = useSearchParams();
-  const pageParam = searchParams.get("p") || "1";
+  const pageParam = searchParams.get("page") || "1";
   const [visibilityRecipes, setVisibilityRecipes] = useState<RecipeCardType[]>(
     []
   );

@@ -30,12 +30,10 @@ const RecipeList = ({ recipes, loading }: Props) => {
             <CircularProgress color="inherit" />
           </Stack>
         ) : (
-          (visibilityRecipes.length > 0 &&
-            visibilityRecipes?.map((recipe, index) => (
-              <RecipeCard key={index} recipe={recipe} />
-            ))) || (
-            <Alert severity="error">За Вашим запитом нічого не знайдено</Alert>
-          )
+          visibilityRecipes.length > 0 &&
+          visibilityRecipes?.map((recipe, index) => (
+            <RecipeCard key={index} recipe={recipe} />
+          ))
         )}
       </div>
       {!loading && <CardPagination recipeCount={recipes.length} />}
