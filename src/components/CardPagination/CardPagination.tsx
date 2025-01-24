@@ -10,7 +10,7 @@ type Props = {
 };
 
 const CardPagination = ({ recipeCount }: Props) => {
-  const { totalPages } = usePagination(recipeCount);
+  const { totalPages, changeCurrentPage } = usePagination(recipeCount);
 
   function Content() {
     const location = useLocation();
@@ -25,18 +25,23 @@ const CardPagination = ({ recipeCount }: Props) => {
         }}
         page={page}
         count={totalPages}
-        renderItem={(item) => (
-          <PaginationItem
-            sx={{
-              fontSize: "15px",
-            }}
-            component={Link}
-            to={`${location.pathname}${
-              item.page === 1 ? "" : `?page=${item.page}`
-            }`}
-            {...item}
-          />
-        )}
+        renderItem={(item) => {
+          return (
+            <PaginationItem
+              sx={{
+                fontSize: "15px",
+              }}
+              component={Link}
+              to={`${location.pathname}${
+                item.page === 1 ? "" : `?page=${item.page}`
+              }`}
+              {...item}
+              onClick={() =>
+                item.page && changeCurrentPage(item.page.toString())
+              }
+            />
+          );
+        }}
       />
     );
   }

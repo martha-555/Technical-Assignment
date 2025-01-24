@@ -22,6 +22,10 @@ export const usePagination = (recipeCount: number) => {
   };
 
   useEffect(() => {
+    if (+currentPage > totalPages) changeCurrentPage(totalPages.toString());
+  }, [totalPages]);
+
+  useEffect(() => {
     if (!currentPage) {
       changeCurrentPage("1");
     }
