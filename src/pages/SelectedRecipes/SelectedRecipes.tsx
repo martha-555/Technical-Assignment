@@ -4,18 +4,21 @@ import PageWrapper from "../../components/PageWrapper/PageWrapper";
 import RecipeList from "../../components/RecipeList/RecipeList";
 import { useContext } from "react";
 import { CardContext } from "../../context/CardProvider";
+import Alert from "@mui/material/Alert";
 
 const SelectedRecipes = () => {
   const contextData = useContext(CardContext);
   const savedRecipes = contextData.savedRecipes;
 
-  if (!savedRecipes || savedRecipes.length === 0) {
-    return <div>No saved recipes available.</div>;
-  }
-
   return (
     <PageWrapper>
-      <RecipeList recipes={savedRecipes} loading={false} />
+      {savedRecipes.length === 0 ? (
+        <Alert severity="error">
+          Looks like you haven’t found any favorites yet.
+        </Alert>
+      ) : (
+        <RecipeList recipes={savedRecipes} loading={false} />
+      )}
     </PageWrapper>
   );
 };

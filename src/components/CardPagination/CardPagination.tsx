@@ -37,7 +37,7 @@ const CardPagination = ({ recipeCount }: Props) => {
               }`}
               {...item}
               onClick={() =>
-                item.page && changeCurrentPage(item.page.toString())
+                item.page && changeCurrentPage(item.page.toString() || "1")
               }
             />
           );

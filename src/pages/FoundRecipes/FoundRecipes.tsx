@@ -17,7 +17,7 @@ const FoundRecipes = () => {
   return (
     <PageWrapper>
       {!isLoading && data?.length == 0 ? (
-        <Alert severity="error">За Вашим запитом нічого не знайдено</Alert>
+        <Alert severity="error">Oops! No results found.</Alert>
       ) : (
         <RecipeList recipes={data || []} loading={isLoading} />
       )}

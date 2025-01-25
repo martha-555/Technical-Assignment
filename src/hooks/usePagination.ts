@@ -16,15 +16,12 @@ export const usePagination = (recipeCount: number) => {
   );
 
   const changeCurrentPage = (value: string) => {
-    if (+value < 1) value = "1";
     setCurrentPage(value);
     newParams.set("page", value);
     setSearchParams(newParams);
   };
 
   useEffect(() => {
-    console.log({ currentPage });
-    console.log({ totalPages });
     if (+currentPage > totalPages) changeCurrentPage(totalPages.toString());
   }, [totalPages]);
 
