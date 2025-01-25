@@ -20,6 +20,11 @@ const CardProvider = (props: { children: ReactElement }) => {
     JSON.parse(localStorage.getItem("saved") || "[]")
   );
 
+  useEffect(() => {
+    const saved = JSON.parse(localStorage.getItem("saved") || "[]");
+    setSavedRecipes(saved);
+  }, []);
+
   const addRecipe = (data: RecipeCardType) => {
     setSavedRecipes((prev) => [...prev, data]);
   };
