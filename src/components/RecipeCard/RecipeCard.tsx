@@ -10,7 +10,6 @@ import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
 import Typography from "@mui/material/Typography";
 import CardActionArea from "@mui/material/CardActionArea";
-import CardActions from "@mui/material/CardActions";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 
 type Props = {
@@ -44,54 +43,62 @@ const RecipeCard = ({ recipe }: Props) => {
     <Card
       onClick={handleViewDetails}
       sx={{
-        flexBasis: "calc(21% - 5px)",
-        maxWidth: 345,
         display: "flex",
         flexDirection: "column",
         justifyContent: "space-between",
-        background: "#efebe9",
+        flexBasis: "calc(25% - 10px)",
+        maxWidth: "250px",
+        minWidth: "250px",
+        flexGrow: 1,
       }}
       id={recipe.idMeal}
     >
-      <CardActionArea id={recipe.idMeal}>
+      <div id={recipe.idMeal}>
         <CardMedia
           id={recipe.idMeal}
           component="img"
-          height="140"
           image={recipe.strMealThumb}
           alt="green iguana"
+          sx={{
+            marginBottom: "10px",
+          }}
         />
-        <CardContent id={recipe.idMeal}>
-          <Typography
-            id={recipe.idMeal}
-            gutterBottom
-            variant="h5"
-            component="div"
-          >
-            {recipe.strMeal}
-          </Typography>
-          <Typography
-            id={recipe.idMeal}
-            variant="body2"
-            sx={{ color: "text.secondary" }}
-          >
-            Category: {recipe.strCategory}
-          </Typography>
-          <Typography
-            id={recipe.idMeal}
-            variant="body2"
-            sx={{ color: "text.secondary" }}
-          >
-            Area: {recipe.strArea}
-          </Typography>
-        </CardContent>
-      </CardActionArea>
-      <CardActions id={recipe.idMeal}></CardActions>
-      <FavoriteIcon
-        color={isFound ? "warning" : "inherit"}
-        onClick={handleClick}
-        sx={{ margin: "10px" }}
-      />
+        <Typography
+          id={recipe.idMeal}
+          gutterBottom
+          variant="h5"
+          component="div"
+          textAlign="center"
+        >
+          {recipe.strMeal}
+        </Typography>
+      </div>
+
+      <div id={recipe.idMeal}>
+        <CardActionArea id={recipe.idMeal}>
+          <CardContent id={recipe.idMeal}>
+            <Typography
+              id={recipe.idMeal}
+              variant="body2"
+              sx={{ color: "text.secondary" }}
+            >
+              Category: {recipe.strCategory}
+            </Typography>
+            <Typography
+              id={recipe.idMeal}
+              variant="body2"
+              sx={{ color: "text.secondary" }}
+            >
+              Area: {recipe.strArea}
+            </Typography>
+            <FavoriteIcon
+              color={isFound ? "warning" : "inherit"}
+              onClick={handleClick}
+              sx={{ margin: "10px" }}
+            />
+          </CardContent>
+        </CardActionArea>
+      </div>
     </Card>
   );
 };

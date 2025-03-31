@@ -2,7 +2,6 @@
 
 import { useEffect, useState } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
-import classes from "./styles.module.css";
 import { useDebounceSearch } from "../../hooks/useDebounceSearch";
 import * as React from "react";
 import { styled, alpha } from "@mui/material/styles";

@@ -125,7 +125,10 @@ const CardDetails = () => {
             <CardContent>
               {Object.entries(mealDetails).map(([key, value], index) => (
                 <div key={index}>
-                  <Typography key={index} sx={{ marginBottom: 2 }}>
+                  <Typography
+                    key={index}
+                    sx={{ marginBottom: 2, wordWrap: "break-word" }}
+                  >
                     {`${key} : ${value}`}
                   </Typography>
                 </div>
