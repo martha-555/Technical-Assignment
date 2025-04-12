@@ -34,12 +34,12 @@
 ## 📸 UI Preview
 
 ---![1](https://github.com/user-attachments/assets/b11c9999-483d-4f9f-9732-84e2bba26fe8)
-![7](https://github.com/user-attachments/assets/5c758345-83f6-44b7-911c-d80b31159464)
-![6](https://github.com/user-attachments/assets/3d08a911-f7d5-4a17-a931-806369bcd085)
-![5](https://github.com/user-attachments/assets/00bef082-6b3a-48e2-87dd-41de86977e40)
-![4](https://github.com/user-attachments/assets/22901e56-5855-4d0a-95b9-92f319df4816)
-![3](https://github.com/user-attachments/assets/08917a1b-4f31-444d-ac6f-ba342989d602)
 ![2](https://github.com/user-attachments/assets/7ddbb6fa-9db5-4764-87a5-b81503f8f55b)
+![3](https://github.com/user-attachments/assets/08917a1b-4f31-444d-ac6f-ba342989d602)
+![4](https://github.com/user-attachments/assets/22901e56-5855-4d0a-95b9-92f319df4816)
+![5](https://github.com/user-attachments/assets/00bef082-6b3a-48e2-87dd-41de86977e40)
+![6](https://github.com/user-attachments/assets/3d08a911-f7d5-4a17-a931-806369bcd085)
+![7](https://github.com/user-attachments/assets/5c758345-83f6-44b7-911c-d80b31159464)
 
 
 ## ⚙️ Installation
